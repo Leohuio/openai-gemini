@@ -1,18 +1,27 @@
-name: Deploy Worker
+name: Check Node.js and npx
+
 on:
   push:
     branches:
       - main
-  pull_request:
-  repository_dispatch:
+
 jobs:
-  deploy:
+  check:
     runs-on: ubuntu-latest
-    name: Deploy
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Build & Deploy Worker
-        uses: cloudflare/wrangler-action@v3
+      # 1. Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          node-version: '16'  # 使用你需要的 Node.js 版本
+
+      # 3. Check Node.js and npx versions
+      - name: Check Node.js and npx version
+        run: |
+          node -v  # 打印 Node.js 版本
+          npx -v   # 打印 npx 版本
